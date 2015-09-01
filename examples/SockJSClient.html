@@ -1,0 +1,65 @@
+<html>
+<script src="http:////cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+<script src="vertxbus-3.0.0.js"></script>
+
+<!-- You're going to want to turn off security in your browser when running this probably -->
+<script>
+        // this is acquired from the server
+        var apiKey = ""
+        var sock = new SockJS('http://localhost:7345/api/v1/timing_streaming');
+
+        // download via socket
+        var getData = function(address, unit, size) {
+            sock.send(JSON.stringify({address: address, "api_key": apiKey,
+                        body : {unit : unit, size: size}}));
+        };
+
+        // helper func for generating fake data
+        var getKb = function(number) {
+            var data = ['a', 'b', 'c', 'd', 'e', '1', '2', '3', '4', '5'];
+            var str = "";
+
+            var totalKb = 1024 * number;
+            for(var i = 0; i < totalKb; i++) {
+                str += data[Math.floor((Math.random() * 10))];
+            }
+            return str;
+        };
+
+        // upload via socket
+        var putData = function(size) {
+            sock.send(JSON.stringify({address: "streaming.store", "api_key": apiKey,
+                        body : {test_batch: "some_batch", unit : "kb", size: size, data: getKb(size)}}));
+        };
+
+        // get the config, ie api key
+        var getApiKey = function() {
+            sock.send(JSON.stringify({address: "streaming.config", "api_key": "", body : {}}));
+        }
+
+        sock.onopen = function() {
+            console.log('connected to server');
+            getApiKey();
+        };
+
+        sock.onmessage = function(e) {
+            console.log('message', e.data);
+
+            var data = JSON.parse(e.data);
+
+            // once we have the api key make some test calls
+            if(data.type == "streaming.config") {
+                apiKey = data.api_key;
+                getData('streaming.static', "kb", 1);
+                getData('streaming.dynamic', "kb", 5);
+                putData(5);
+            }
+        };
+
+        sock.onclose = function() {
+            console.log('lost connection to server');
+        };
+    </script>
+<body>
+</body>
+</html>

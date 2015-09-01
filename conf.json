@@ -1,0 +1,13 @@
+{
+    "port" : 7345,
+    "default_test_base_url" : "http://localhost",
+    "data_retention_seconds" : 86400,
+    "cassandra": {
+        "seeds": ["localhost"],
+        "reconnect": {
+            "name": "exponential",
+            "base_delay": 1000,
+            "max_delay": 10000
+        }
+    }
+}

@@ -1,0 +1,59 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.1.1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+version = '0.5.0'
+
+if (!JavaVersion.current().java8Compatible) {
+    throw new IllegalStateException('''A Haiku:
+                                      |  This needs Java 8,
+                                      |  You are using something else,
+                                      |  Refresh. Try again.'''.stripMargin())
+}
+
+repositories {
+    maven { url = 'http://oss.sonatype.org/content/repositories/releases/' }
+    maven { url = 'http://oss.sonatype.org/content/repositories/snapshots/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'io.vertx:vertx-core:3.0.0'
+    compile 'io.vertx:vertx-web:3.0.0'
+    compile "commons-lang:commons-lang:2.6"
+    compile "commons-codec:commons-codec:1.9"
+    compile "joda-time:joda-time:2.4"
+    compile "com.google.guava:guava:18.0"
+    compile "com.datastax.cassandra:cassandra-driver-core:2.1.5"
+    compile "com.datastax.cassandra:cassandra-driver-mapping:2.1.5"
+    compile "com.englishtown.vertx:vertx-cassandra:3.0.0"
+    compile "com.englishtown.vertx:vertx-cassandra-mapping:3.0.0"
+    compile "ch.qos.logback:logback-classic:1.0.13"
+    compile "ch.qos.logback:logback-core:1.0.13"
+    compile "com.cyngn.vertx:vertx-util:0.5.3"
+    compile "javax.ws.rs:javax.ws.rs-api:2.0.1"
+    testCompile "junit:junit:4.11"
+    testCompile "io.vertx:vertx-unit:3.0.0"
+    testCompile "org.mockito:mockito-core:1.9.5"
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Class': 'io.vertx.core.Starter'
+        attributes 'Main-Verticle': 'com.cyngn.chrono.Server'
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
