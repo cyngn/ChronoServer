@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS chrono.report (
     mobile_network_class varchar,
     mobile_network_type varchar,
     client_ip varchar,
-        created timestamp,
+    created timestamp,
     measurements list<frozen<measurement>>,
     PRIMARY KEY (batch_name, device_id, created)
 );
