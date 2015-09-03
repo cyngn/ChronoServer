@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS chrono.payload (
 );
 
 CREATE TABLE IF NOT EXISTS chrono.upload_data (
-	test_batch varchar,
+    test_batch varchar,
     unit varchar,
     size bigint,
     data varchar,
@@ -35,19 +35,19 @@ CREATE TABLE IF NOT EXISTS chrono.upload_data (
 );
 
 CREATE TABLE IF NOT EXISTS chrono.report (
-	batch_name varchar,
+    batch_name varchar,
     mode varchar,
     device_id varchar,
-	mobile_carrier varchar,
+    mobile_carrier varchar,
     mobile_rssi varchar,
     wifi_state varchar,
     wifi_rssi varchar,
-	gps_coordinates varchar,
-  	tag varchar,
-	mobile_network_class varchar,
-	mobile_network_type varchar,
-	client_ip varchar,
-    created timestamp,
+    gps_coordinates varchar,
+    tag varchar,
+    mobile_network_class varchar,
+    mobile_network_type varchar,
+    client_ip varchar,
+        created timestamp,
     measurements list<frozen<measurement>>,
     PRIMARY KEY (batch_name, device_id, created)
 );
