@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The URLs and the method to use to send them.
@@ -21,12 +22,12 @@ public class UrlPackage {
 
     @Field
     @JsonProperty
-    public List<String> urls;
+    public Set<String> urls;
 
     public UrlPackage() {
     }
 
-    public UrlPackage(String method, List<String> urls) {
+    public UrlPackage(String method, Set<String> urls) {
         this.method = method;
         this.urls = urls;
     }
@@ -39,11 +40,11 @@ public class UrlPackage {
         this.method = method;
     }
 
-    public List<String> getUrls() {
+    public Set<String> getUrls() {
         return urls;
     }
 
-    public void setUrls(List<String> urls) {
+    public void setUrls(Set<String> urls) {
         this.urls = urls;
     }
 
