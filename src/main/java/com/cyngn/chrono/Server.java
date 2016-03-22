@@ -93,30 +93,32 @@ public class Server extends AbstractVerticle {
         // setup a cassandra connection and storage access
         JsonCassandraConfigurator configurator = new JsonCassandraConfigurator(vertx);
         session = new DefaultCassandraSession(Cluster.builder(), configurator, vertx);
-        storageManager = new StorageManager(session, svrConfig);
 
-        // listen for the initialized message, the sending thread receives this also
-        EventBusTools.oneShotLocalConsumer(vertx.eventBus(), INITIALIZED_MSG, getStartupHandler());
+        session.onReady(result -> {
+            storageManager = new StorageManager(session, svrConfig);
+            // listen for the initialized message, the sending thread receives this also
+            EventBusTools.oneShotLocalConsumer(vertx.eventBus(), INITIALIZED_MSG, getStartupHandler());
 
-        if (isInitializerThread()) {
-            // initialize the test data
-            SampleMapper.getInstance();
-            try {
-                logger.info("Starting up server... on ip: {} port: {}",
-                        InetAddress.getLocalHost().getHostAddress(), svrConfig.port);
-                logger.info("Using shared api key: {}", apiSharedSecret);
+            if (isInitializerThread()) {
+                // initialize the test data
+                SampleMapper.getInstance();
+                try {
+                    logger.info("Starting up server... on ip: {} port: {}",
+                            InetAddress.getLocalHost().getHostAddress(), svrConfig.port);
+                    logger.info("Using shared api key: {}", apiSharedSecret);
 
-                // make sure the basic test data is in place
-                new Bootstrap(storageManager, success -> {
-                    // bootstrap is done let all threads know they can begin to listen on the server
-                    if(success) { vertx.eventBus().publish(INITIALIZED_MSG, new JsonObject()); }
-                    else { stop(); }
-                }, svrConfig.defaultTestBaseUrl);
-            } catch (UnknownHostException e) {
-                logger.error("Failed to get host ip address", e);
-                stop();
+                    // make sure the basic test data is in place
+                    new Bootstrap(storageManager, success -> {
+                        // bootstrap is done let all threads know they can begin to listen on the server
+                        if(success) { vertx.eventBus().publish(INITIALIZED_MSG, new JsonObject()); }
+                        else { stop(); }
+                    }, svrConfig.defaultTestBaseUrl);
+                } catch (UnknownHostException e) {
+                    logger.error("Failed to get host ip address", e);
+                    stop();
+                }
             }
-        }
+        });
     }
 
     protected final boolean isInitializerThread() {

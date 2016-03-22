@@ -1,14 +1,9 @@
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.1.1'
-    }
+plugins {
+    id 'java' // or 'groovy' Must be explicitly applied
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
-apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-version = '0.5.0'
+version = '0.6.0'
 
 if (!JavaVersion.current().java8Compatible) {
     throw new IllegalStateException('''A Haiku:
@@ -24,22 +19,23 @@ repositories {
 }
 
 dependencies {
-    compile 'io.vertx:vertx-core:3.0.0'
-    compile 'io.vertx:vertx-web:3.0.0'
+    compile 'io.vertx:vertx-core:3.3.0-SNAPSHOT'
+    compile 'io.vertx:vertx-web:3.3.0-SNAPSHOT'
     compile "commons-lang:commons-lang:2.6"
     compile "commons-codec:commons-codec:1.9"
     compile "joda-time:joda-time:2.4"
     compile "com.google.guava:guava:18.0"
     compile "com.datastax.cassandra:cassandra-driver-core:2.1.5"
     compile "com.datastax.cassandra:cassandra-driver-mapping:2.1.5"
-    compile "com.englishtown.vertx:vertx-cassandra:3.0.0"
-    compile "com.englishtown.vertx:vertx-cassandra-mapping:3.0.0"
+    compile "com.englishtown.vertx:vertx-cassandra:3.2.0"
+    compile "com.englishtown.vertx:vertx-cassandra-mapping:3.2.0"
     compile "ch.qos.logback:logback-classic:1.0.13"
     compile "ch.qos.logback:logback-core:1.0.13"
-    compile "com.cyngn.vertx:vertx-util:0.5.3"
+    compile "com.cyngn.vertx:vertx-util:3.3.0-SNAPSHOT"
     compile "javax.ws.rs:javax.ws.rs-api:2.0.1"
+    compile "io.vertx:vertx-codegen:3.3.0-SNAPSHOT"
     testCompile "junit:junit:4.11"
-    testCompile "io.vertx:vertx-unit:3.0.0"
+    testCompile "io.vertx:vertx-unit:3.3.0-SNAPSHOT"
     testCompile "org.mockito:mockito-core:1.9.5"
 }
 
@@ -55,5 +51,5 @@ shadowJar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '2.12'
 }
