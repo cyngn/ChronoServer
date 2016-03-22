@@ -5,6 +5,7 @@ import com.cyngn.chrono.storage.entity.Payload;
 import com.cyngn.chrono.storage.entity.UrlPackage;
 import com.cyngn.vertx.async.promise.Promise;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,14 +100,14 @@ public class Bootstrap {
             if ("missing".equals(status)) {
                 List<UrlPackage> packages = Lists.newArrayList(
                         new UrlPackage(HttpMethod.GET,
-                                Lists.newArrayList(
+                                Sets.newHashSet(
                                         baseUrl + "/api/v1/timing/static?unit=kb&size=1",
                                         baseUrl + "/api/v1/timing/static_cached?unit=kb&size=1",
                                         baseUrl + "/api/v1/timing/dynamic?unit=kb&size=1",
                                         baseUrl + "/api/v1/timing/dynamic_cached?unit=kb&size=1"
                                 )),
                         new UrlPackage(HttpMethod.POST,
-                                Lists.newArrayList(
+                                Sets.newHashSet(
                                         baseUrl + "/api/v1/timing/store?unit=kb&size=1",
                                         baseUrl + "/api/v1/timing/store_mem?unit=kb&size=1"
                                 )));
